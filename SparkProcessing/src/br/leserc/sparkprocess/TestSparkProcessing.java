@@ -49,12 +49,16 @@ public class TestSparkProcessing {
 		df2.createOrReplaceTempView("parkingSensors2");
 		
 		// Select data from the two dataframes
-		Dataset<Row> sqlDf1 = spark.sql("SELECT CAST(date AS Timestamp), value from parkingSensors1");
-		Dataset<Row> sqlDf2 = spark.sql("SELECT CAST(date AS Timestamp), value from parkingSensors2");
+		String querySelect1 = "SELECT '" + uuid1 + "' as UUID, CAST(date AS Timestamp) as Timestamp, value as isOccupied from parkingSensors1";
+		String querySelect2 = "SELECT '" + uuid2 + "' as UUID, CAST(date AS Timestamp) as Timestamp, value as isOccupied from parkingSensors2";
+		
+		Dataset<Row> sqlDf1 = spark.sql(querySelect1 + " UNION ALL " + querySelect2);
+		//Dataset<Row> sqlDf2 = spark.sql("SELECT '" + uuid2 + "' as UUID, CAST(date AS Timestamp) as Timestamp, value as isOccupied from parkingSensors2");
 		sqlDf1.show();
-		sqlDf2.show();
+		//sqlDf2.show();
 		//sqlDf1.printSchema();
 		//System.out.println(dataFromInterSCity);
+		
 	}
 
 }
